@@ -1,0 +1,202 @@
+MDScreenManager:
+    MDScreen:
+        MDBottomNavigationItem:#+HOME Screen
+            name: 'home'
+            text: 'Hogar'
+            icon: 'home'
+            MDScreen:
+                name: "Hogar"
+                MDBoxLayout:
+                    orientation: 'vertical'
+                    MDTopAppBar:
+                        pos_hint: {"center_x": .5, "center_y": .95}
+                        title: "Indios de Chacao"  # Set the title directly
+                        elevation: 10  # Optional: Adds shadow/elevation to the app bar
+                    MDLabel:
+                        text: "Bienvenido\nClientes: X / Sesiones Activas: XX"
+                        halign: 'center'
+                        font_style: 'Subtitle1'
+                        id: homeLabel
+        MDBottomNavigationItem:#+CLientScreen
+            name: 'clients'
+            text: 'Clientes'
+            icon: 'account'
+            MDScreen:
+                MDBoxLayout:
+                    orientation: 'vertical'
+                    spacing: 10
+                    MDTopAppBar:
+                        pos_hint: {"center_x": .5, "center_y": .95}
+                        title: "Clientes"  # Set the title directly
+                        elevation: 10  # Optional: Adds shadow/elevation to the app bar
+                        
+                    ScrollView:
+                        MDList:
+                            id: clients_list
+                            padding: "10dp"
+                            spacing: "2dp"
+                    MDAnchorLayout:
+                        anchor_y:'bottom'
+                        anchor_x:'right'
+                        MDFloatingActionButton:
+                            icon: "pencil-outline"
+                            md_bg_color: app.theme_cls.accent_color  # Use theme accent color for button
+                            on_release: app.change_screen("CreateClient")
+        MDBottomNavigationItem:#+SessionScreen
+            name: 'sessions'
+            text: 'Sesiones'
+            icon: 'file'
+            on_tab_release: app.change_screen("Sesiones")
+            MDScreen:
+                name: "Sesiones"
+                MDBoxLayout:
+                    orientation: 'vertical'
+                    spacing: 10
+                    MDTopAppBar:
+                        pos_hint: {"center_x": .5, "center_y": .95}
+                        title: "Sesiones Activas"
+                        elevation: 10  # Optional: adds shadow/elevation to the app bar
+                    ScrollView:
+                        MDList:
+                            id: session_list
+                            spacing: "2dp"
+                            padding: "2dp"
+                    
+                    MDAnchorLayout:
+                        anchor_y:'bottom'
+                        anchor_x:'right' 
+                        size_hint_y: 0.15
+                        MDFloatingActionButton:
+                            icon: "pencil-outline"
+                            md_bg_color: app.theme_cls.accent_color  # Use the accent color of the theme
+                            on_release: app.change_screen("CreateSession")
+    MDScreen:#+ Create Session
+        name: "CreateSession"
+        MDBoxLayout:
+            spacing: 20
+            orientation: 'vertical'
+            MDTopAppBar:
+                pos_hint: {"center_x": .5, "center_y": .95}
+                left_action_items: [["undo", lambda x: app.change_screen("Sesiones")]]
+                title: "Crear una sesión"
+                title_position: "center"
+            MDGridLayout:
+                cols: 2
+                spacing: 20
+                padding: 20
+                MDRaisedButton:
+                    id: select_clients
+                    on_release: app.openClientSelection()
+                    text: "Selecionar cliente"
+                    icon: "chevron-down"
+                    size_hint_y: None
+                    height: "48dp"
+                MDRaisedButton:
+                    id: select_intensity
+                    on_release: app.openIntensitySelection()
+                    text: "Selecionar Intensidad"
+                    icon: "chevron-down"
+                    size_hint_y: None
+                    height: "48dp"
+    MDScreen:#+Create client
+        name: "CreateClient"
+        MDBoxLayout:
+            spacing: 10
+            orientation: 'vertical'
+            MDTopAppBar:
+                pos_hint: {"center_x": .5, "center_y": .95}
+                left_action_items: [["undo", lambda x: app.change_screen("Clientes")]]
+                title: "Crear un Cliente"
+                title_position: "center"
+            MDGridLayout:
+                padding: 20
+                cols: 2
+                spacing: 20
+                MDTextField:
+                    id: name_field
+                    hint_text: "Nombre"
+                    icon_left: 'account'
+                    size_hint_y: None
+                    height: "48dp"
+                MDTextField:
+                    id: last_name_field
+                    hint_text: "Apellido"
+                    icon_left: 'account'
+                    size_hint_y: None
+                    height: "48dp"
+                MDTextField:
+                    id: weight_field
+                    hint_text: "Peso (kilos)"
+                    input_filter: "float"
+                    size_hint_y: None
+                    height: "48dp"
+                MDTextField:
+                    id: height_field
+                    hint_text: "Altura (metros)"
+                    input_filter: "float"
+                    size_hint_y: None
+                    height: "48dp"
+                MDTextField:
+                    id: gender_field
+                    hint_text: "Sexo"
+                    icon_left: 'gender-male-female'
+                    helper_text: "femenino/masculino"
+                    helper_text_mode: 'on_error'
+                    on_text: app.validateGender(self, self.text)
+                    size_hint_y: None
+                    height: "48dp"
+                MDTextField:
+                    id: date_field
+                    hint_text: "Fecha de nacimiento dd/mm/YYYY"
+                    helper_text: "Formato dd/mm/yyyy"
+                    helper_text_mode: 'on_error'
+                    size_hint_y: None
+                    height: "48dp"
+            MDBoxLayout:
+                orientation: 'vertical'
+                padding: 20
+                MDRaisedButton:
+                    text: "Crear"
+                    on_release: app.createClient()
+                    icon: "plus"
+                    md_bg_color: app.theme_cls.primary_color  # Use the primary color of the theme
+                    size_hint_y: None
+                    height: "48dp"
+    MDScreen:#+Profile
+        name: 'Client Profile'
+        MDBoxLayout:
+            spacing: 10
+            orientation: 'vertical'
+            MDTopAppBar:
+                id: tittleName
+                pos_hint: {"center_x": .5, "center_y": .95}
+                left_action_items: [["undo", lambda x: app.change_screen("Clientes")]]
+                title: "Perfil de Cliente"
+                title_position: "center"
+
+            MDGridLayout:
+                cols: 2
+                padding: 10
+                spacing: 10
+                size_hint_y: .25
+                MDLabel:
+                    text: "Datos personales:"
+                    font_style: "Subtitle1"
+                MDWidget:
+                MDLabel:
+                    text: 'Genero - edad XX'
+                    id: genderAgeData
+                MDLabel:
+                    text: 'BMI: XX'
+                    id: bdiData
+                MDLabel:
+                    text: 'Altura - Peso'
+                    id: heightWeightData
+                MDLabel:
+                    text: 'BMR: XXXX'
+                    id: bmrData
+            MDScrollView:
+                MDList:
+                    padding: 10
+                    spacing: 2
+                    id: profileSessionList
